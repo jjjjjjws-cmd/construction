@@ -58,9 +58,8 @@
   .meta-row .value { color:var(--text); }
   .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
   .tag { background:var(--tag-bg); border:1px solid var(--border); border-radius:3px; font-size:11px; color:var(--text2); padding:2px 8px; font-family:'IBM Plex Mono',monospace; }
-  /* 행정처분 섹션 */
   .admi-section { background:rgba(220,38,38,.05); border:1px solid rgba(220,38,38,.15); border-radius:6px; padding:10px 12px; margin-bottom:14px; }
-  .admi-title { font-size:11px; font-weight:600; color:var(--red); margin-bottom:8px; font-family:'IBM Plex Mono',monospace; letter-spacing:.05em; }
+  .admi-title { font-size:11px; font-weight:600; color:var(--red); margin-bottom:8px; font-family:'IBM Plex Mono',monospace; }
   .admi-item { border-top:1px solid rgba(220,38,38,.1); padding-top:6px; margin-top:6px; font-size:11px; }
   .admi-item:first-child { border-top:none; padding-top:0; margin-top:0; }
   .admi-dename { font-weight:600; color:var(--red); }
@@ -69,56 +68,39 @@
   .card-actions { display:flex; gap:8px; padding-top:14px; border-top:1px solid var(--border); }
   .btn-call { flex:1; background:rgba(91,155,255,.1); border:1px solid rgba(91,155,255,.2); border-radius:4px; color:var(--accent); font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:500; padding:7px; cursor:pointer; transition:all .1s; text-align:center; }
   .btn-call:hover { background:rgba(91,155,255,.2); }
-  .btn-copy { background:var(--surface2); border:1px solid var(--border); border-radius:4px; color:var(--text3); font-size:11px; padding:7px 12px; cursor:pointer; transition:all .1s; }
+  .btn-copy { background:var(--surface2); border:1px solid var(--border); border-radius:4px; color:var(--text3); font-size:11px; padding:7px 12px; cursor:pointer; }
   .btn-copy:hover { color:var(--text); border-color:var(--border2); }
   .empty { grid-column:1/-1; text-align:center; padding:80px 0; color:var(--text3); }
   .empty .icon-big { font-size:40px; margin-bottom:16px; display:block; opacity:.3; }
   .empty p { font-family:'IBM Plex Mono',monospace; font-size:13px; }
-  .paging-wrap { display:flex; justify-content:center; gap:4px; margin-top:20px; }
+  .paging-wrap { display:flex; justify-content:center; gap:4px; margin-top:20px; flex-wrap:wrap; }
   .toast { position:fixed; bottom:24px; right:24px; background:var(--surface2); border:1px solid var(--border2); border-radius:6px; color:var(--text); font-size:12px; padding:10px 16px; font-family:'IBM Plex Mono',monospace; opacity:0; transform:translateY(8px); transition:all .2s; pointer-events:none; z-index:999; }
   .toast.show { opacity:1; transform:translateY(0); }
   @media(max-width:900px) { .search-grid { grid-template-columns:1fr 1fr; } .btn-search { grid-column:span 2; } .container { padding:16px; } header { padding:0 16px; } }
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">VENDOR<span>/</span>DB <span>// MERCURY RNS</span></div>
-  <div class="header-meta" id="headerMeta">로딩 중...</div>
+  <div class="header-meta" id="headerMeta"></div>
 </header>
-
 <div class="container">
   <div class="search-panel">
     <div class="panel-title">// 업체 검색 · KISCON 실시간</div>
     <div class="search-grid">
-      <div class="field">
-        <label>시·도</label>
-        <select id="sidoSelect"><option value="">선택하세요</option></select>
-      </div>
-      <div class="field">
-        <label>시·군·구 (직접 입력)</label>
-        <input type="text" id="sigunguInput" placeholder="예: 강남구, 수원시..." onkeydown="if(event.key==='Enter')doSearch(1)">
-      </div>
-      <div class="field">
-        <label>공종</label>
+      <div class="field"><label>시·도</label><select id="sidoSelect"><option value="">선택하세요</option></select></div>
+      <div class="field"><label>시·군·구 (직접 입력)</label><input type="text" id="sigunguInput" placeholder="예: 강남구, 수원시..." onkeydown="if(event.key==='Enter')doSearch(1)"></div>
+      <div class="field"><label>공종</label>
         <select id="typeSelect" onchange="syncTypeInput(this)"><option value="">전체 공종</option></select>
         <input type="text" id="typeInput" placeholder="직접 입력..." style="margin-top:6px" onkeydown="if(event.key==='Enter')doSearch(1)">
       </div>
-      <div class="field">
-        <label>업체명 검색</label>
-        <input type="text" id="nameInput" placeholder="업체명 입력..." onkeydown="if(event.key==='Enter')doSearch(1)">
-      </div>
+      <div class="field"><label>업체명 검색</label><input type="text" id="nameInput" placeholder="업체명 입력..." onkeydown="if(event.key==='Enter')doSearch(1)"></div>
       <button class="btn-search" id="searchBtn" onclick="doSearch(1)">검색</button>
     </div>
     <div class="filter-row">
-      <label>
-        <input type="checkbox" id="admiOnly">
-        <span class="admi-only-label">⚠ 행정처분 업체만 보기</span>
-      </label>
-      <span id="admiStatus" style="font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;"></span>
+      <label><input type="checkbox" id="admiOnly"><span class="admi-only-label">⚠ 행정처분 업체만 보기</span></label>
     </div>
   </div>
-
   <div class="status-bar">
     <div class="result-count" id="resultCount">시·도를 선택하고 검색하세요</div>
     <div class="sort-btns">
@@ -127,197 +109,163 @@
       <button class="sort-btn" onclick="sortBy('type',this)">공종순</button>
     </div>
   </div>
-
   <div class="company-grid" id="grid"></div>
   <div class="paging-wrap" id="paging"></div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-var PAGE_SIZE = 100;
-var SIDOS = ['서울특별시','부산광역시','대구광역시','인천광역시','광주광역시','대전광역시','울산광역시','세종특별자치시','경기도','강원특별자치도','충청북도','충청남도','전북특별자치도','전라남도','경상북도','경상남도','제주특별자치도'];
-var BIZ_TYPES = ['실내건축공사업','금속구조물창호온실공사업','도장공사업','방수공사업','배관공사업','소방시설공사업','승강기설치공사업','난방공사업','토목공사업','건축공사업','조경공사업','상·하수도설비공사업','철근·콘크리트공사업','구조물해체·비계공사업','시설물유지관리업'];
+var SB_URL='https://dkspxesasrzuilgzquib.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRrc3B4ZXNhc3J6dWlsZ3pxdWliIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NTgxNjYzOCwiZXhwIjoyMDkxMzkyNjM4fQ.kPRoIpm3M2jG6j0kJJcHC9T1CXsB94MDqROBNS-ko1o';
+var PAGE_SIZE=100;
+var SIDOS=['서울특별시','부산광역시','대구광역시','인천광역시','광주광역시','대전광역시','울산광역시','세종특별자치시','경기도','강원특별자치도','충청북도','충청남도','전북특별자치도','전라남도','경상북도','경상남도','제주특별자치도'];
+var SIDO_MAP={'서울특별시':'서울','부산광역시':'부산','대구광역시':'대구','인천광역시':'인천','광주광역시':'광주','대전광역시':'대전','울산광역시':'울산','세종특별자치시':'세종','경기도':'경기','강원특별자치도':'강원','충청북도':'충북','충청남도':'충남','전북특별자치도':'전북','전라남도':'전남','경상북도':'경북','경상남도':'경남','제주특별자치도':'제주'};
+var BIZ_TYPES=['실내건축공사업','금속구조물창호온실공사업','도장공사업','방수공사업','배관공사업','소방시설공사업','승강기설치공사업','난방공사업','토목공사업','건축공사업','조경공사업','상·하수도설비공사업','철근·콘크리트공사업','구조물해체·비계공사업','시설물유지관리업'];
+var results=[],curSort='name',curPage=1,totalCnt=0;
 
-var results = [];
-var curSort = 'name';
-var curPage = 1;
-var totalCnt = 0;
+function sbH(){ return {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact'}; }
 
-function init() {
-  var ss = document.getElementById('sidoSelect');
-  SIDOS.forEach(function(s){ var o=document.createElement('option'); o.value=s; o.textContent=s; ss.appendChild(o); });
-  var ts = document.getElementById('typeSelect');
-  BIZ_TYPES.forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=t; ts.appendChild(o); });
-  pollStatus();
+function init(){
+  document.getElementById('headerMeta').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'})+' · KISCON DB';
+  var ss=document.getElementById('sidoSelect');
+  SIDOS.forEach(function(s){var o=document.createElement('option');o.value=s;o.textContent=s;ss.appendChild(o);});
+  var ts=document.getElementById('typeSelect');
+  BIZ_TYPES.forEach(function(t){var o=document.createElement('option');o.value=t;o.textContent=t;ts.appendChild(o);});
 }
 
-function pollStatus() {
-  fetch('/status').then(function(r){ return r.json(); }).then(function(d) {
-    var meta = document.getElementById('headerMeta');
-    var admiSt = document.getElementById('admiStatus');
-    var dateStr = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit'});
-    if (d.ready) {
-      meta.textContent = dateStr + ' · 총 ' + d.total.toLocaleString() + '개사';
-    } else {
-      meta.textContent = d.status;
-      setTimeout(pollStatus, 2000);
-    }
-    if (d.admi_ready) {
-      admiSt.textContent = '행정처분 DB 로딩 완료';
-    } else {
-      admiSt.textContent = '행정처분 DB 수집 중...';
-      setTimeout(pollStatus, 3000);
-    }
-  }).catch(function(){ setTimeout(pollStatus, 3000); });
-}
+function syncTypeInput(sel){ document.getElementById('typeInput').value=sel.value; }
 
-function syncTypeInput(sel) {
-  document.getElementById('typeInput').value = sel.value;
-}
-
-function doSearch(page) {
-  curPage = page || 1;
-  var sido    = document.getElementById('sidoSelect').value;
-  var sigungu = document.getElementById('sigunguInput').value.trim();
-  var bizType = document.getElementById('typeInput').value.trim() || document.getElementById('typeSelect').value;
-  var name    = document.getElementById('nameInput').value.trim();
-  var admiOnly= document.getElementById('admiOnly').checked ? '1' : '0';
-
-  if (!sido && !name && !sigungu && !bizType) { showToast('조건을 하나 이상 입력하세요'); return; }
-
-  var btn = document.getElementById('searchBtn');
-  btn.textContent = '검색 중...'; btn.disabled = true;
-  document.getElementById('grid').innerHTML = '<div class="empty"><span class="icon-big">◎</span><p>불러오는 중...</p></div>';
-  document.getElementById('paging').innerHTML = '';
-
-  var params = '?pageNo=' + curPage;
-  if (sido)     params += '&sido='    + encodeURIComponent(sido);
-  if (sigungu)  params += '&sigungu=' + encodeURIComponent(sigungu);
-  if (bizType)  params += '&bizType=' + encodeURIComponent(bizType);
-  if (name)     params += '&bizNm='   + encodeURIComponent(name);
-  if (admiOnly === '1') params += '&admiOnly=1';
-
-  fetch('/api' + params)
-  .then(function(r){ return r.json(); })
-  .then(function(data) {
-    totalCnt = data.totalCount || 0;
-    results = (data.items || []).map(function(d) {
-      return {
-        name:     d.bizNm    || '-',
-        sido:     d.sido     || '-',
-        sigungu:  d.sigungu  || '-',
-        addr:     d.bizAddr  || '-',
-        rep:      d.repNm    || '-',
-        tel:      d.telNo    || '-',
-        bizType:  d.bizType  || '-',
-        admiList: d.admiList || [],
-      };
-    });
-    renderGrid();
+function doSearch(page){
+  curPage=page||1;
+  var sido=document.getElementById('sidoSelect').value;
+  var sigungu=document.getElementById('sigunguInput').value.trim();
+  var bizType=document.getElementById('typeInput').value.trim()||document.getElementById('typeSelect').value;
+  var name=document.getElementById('nameInput').value.trim();
+  var admiOnly=document.getElementById('admiOnly').checked;
+  if(!sido&&!name&&!sigungu&&!bizType){showToast('조건을 하나 이상 입력하세요');return;}
+  var btn=document.getElementById('searchBtn');
+  btn.textContent='검색 중...';btn.disabled=true;
+  document.getElementById('grid').innerHTML='<div class="empty"><span class="icon-big">◎</span><p>불러오는 중...</p></div>';
+  document.getElementById('paging').innerHTML='';
+  var offset=(curPage-1)*PAGE_SIZE;
+  var sidoShort=SIDO_MAP[sido]||'';
+  var q=SB_URL+'/rest/v1/vendors?select=*&order=biz_nm';
+  if(sidoShort) q+='&sido=ilike.'+encodeURIComponent('%'+sidoShort+'%');
+  if(sigungu)   q+='&sigungu=ilike.'+encodeURIComponent('%'+sigungu+'%');
+  if(bizType)   q+='&biz_type=ilike.'+encodeURIComponent('%'+bizType+'%');
+  if(name)      q+='&biz_nm=ilike.'+encodeURIComponent('%'+name+'%');
+  q+='&limit='+PAGE_SIZE+'&offset='+offset;
+  fetch(q,{headers:Object.assign({},sbH(),{'Range':offset+'-'+(offset+PAGE_SIZE-1),'Range-Unit':'items'})})
+  .then(function(r){
+    var range=r.headers.get('Content-Range');
+    if(range){var p=range.split('/');totalCnt=p[1]==='*'?0:parseInt(p[1])||0;}
+    return r.json();
   })
-  .catch(function(e) {
-    document.getElementById('grid').innerHTML = '<div class="empty"><span class="icon-big">✗</span><p>오류: ' + e.message + '</p></div>';
+  .then(function(data){
+    var items=Array.isArray(data)?data:[];
+    var snos=items.map(function(d){return d.biz_reg_no;}).filter(function(s){return s&&s!=='-';});
+    if(!snos.length){buildResults(items,{},admiOnly,btn);return;}
+    var aq=SB_URL+'/rest/v1/admi?select=*&sno=in.('+snos.map(encodeURIComponent).join(',')+')';
+    fetch(aq,{headers:sbH()})
+    .then(function(r){return r.json();})
+    .then(function(admiData){
+      var admiMap={};
+      (Array.isArray(admiData)?admiData:[]).forEach(function(a){
+        if(!admiMap[a.sno])admiMap[a.sno]=[];
+        admiMap[a.sno].push(a);
+      });
+      buildResults(items,admiMap,admiOnly,btn);
+    })
+    .catch(function(){buildResults(items,{},admiOnly,btn);});
   })
-  .finally(function() {
-    btn.textContent = '검색'; btn.disabled = false;
+  .catch(function(e){
+    document.getElementById('grid').innerHTML='<div class="empty"><span class="icon-big">✗</span><p>오류: '+e.message+'</p></div>';
+    btn.textContent='검색';btn.disabled=false;
   });
 }
 
-function sortBy(key, btn) {
-  curSort = key;
-  document.querySelectorAll('.sort-btn').forEach(function(b){ b.classList.remove('active'); });
+function buildResults(items,admiMap,admiOnly,btn){
+  results=items.map(function(d){
+    return{name:d.biz_nm||'-',sido:d.sido||'-',sigungu:d.sigungu||'-',addr:d.biz_addr||'-',rep:d.rep_nm||'-',tel:d.tel_no||'-',bizType:d.biz_type||'-',sno:d.biz_reg_no||'-',admiList:admiMap[d.biz_reg_no]||[]};
+  });
+  if(admiOnly) results=results.filter(function(d){return d.admiList.length>0;});
+  renderGrid();
+  btn.textContent='검색';btn.disabled=false;
+}
+
+function sortBy(key,btn){
+  curSort=key;
+  document.querySelectorAll('.sort-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   results.sort(function(a,b){
-    if(key==='name')   return a.name.localeCompare(b.name);
-    if(key==='region') return (a.sido+a.sigungu).localeCompare(b.sido+b.sigungu);
-    if(key==='type')   return a.bizType.localeCompare(b.bizType);
+    if(key==='name') return a.name.localeCompare(b.name);
+    if(key==='region') return(a.sido+a.sigungu).localeCompare(b.sido+b.sigungu);
+    if(key==='type') return a.bizType.localeCompare(b.bizType);
     return 0;
   });
   renderGrid();
 }
 
-function renderAdmi(admiList) {
-  if (!admiList || !admiList.length) return '';
-  var html = '<div class="admi-section"><div class="admi-title">⚠ 행정처분 이력 ' + admiList.length + '건</div>';
-  admiList.slice(0, 3).forEach(function(a) {
-    html += '<div class="admi-item">';
-    html += '<div class="admi-dename">' + a.dename + '</div>';
-    if (a.reason && a.reason !== '-') html += '<div class="admi-detail">' + a.reason + '</div>';
-    var period = '';
-    if (a.sdate && a.sdate !== '-') period = a.sdate + ' ~ ' + (a.edate !== '-' ? a.edate : '');
-    else if (a.gsdate && a.gsdate !== '-') period = '공시일: ' + a.gsdate;
-    if (period) html += '<div class="admi-period">' + period + '</div>';
-    html += '</div>';
+function renderAdmi(admiList){
+  if(!admiList||!admiList.length)return'';
+  var html='<div class="admi-section"><div class="admi-title">⚠ 행정처분 이력 '+admiList.length+'건</div>';
+  admiList.slice(0,3).forEach(function(a){
+    html+='<div class="admi-item"><div class="admi-dename">'+a.dename+'</div>';
+    if(a.reason&&a.reason!=='-') html+='<div class="admi-detail">'+a.reason+'</div>';
+    var period='';
+    if(a.sdate&&a.sdate!=='-') period=a.sdate+' ~ '+(a.edate!=='-'?a.edate:'');
+    else if(a.gsdate&&a.gsdate!=='-') period='공시일: '+a.gsdate;
+    if(period) html+='<div class="admi-period">'+period+'</div>';
+    html+='</div>';
   });
-  if (admiList.length > 3) html += '<div style="font-size:10px;color:var(--text3);margin-top:4px;">외 ' + (admiList.length-3) + '건 더...</div>';
-  html += '</div>';
+  if(admiList.length>3) html+='<div style="font-size:10px;color:var(--text3);margin-top:4px;">외 '+(admiList.length-3)+'건 더...</div>';
+  html+='</div>';
   return html;
 }
 
-function renderGrid() {
-  var grid  = document.getElementById('grid');
-  var totPg = Math.ceil(totalCnt / PAGE_SIZE);
-  var cntHtml = '검색 결과 <strong>' + totalCnt.toLocaleString() + '</strong>건';
-  if (totPg > 1) cntHtml += ' (' + curPage + '/' + totPg + 'p)';
-  document.getElementById('resultCount').innerHTML = cntHtml;
-
-  if (!results.length) {
-    grid.innerHTML = '<div class="empty"><span class="icon-big">◫</span><p>조건에 맞는 업체가 없습니다.</p></div>';
-    document.getElementById('paging').innerHTML = '';
+function renderGrid(){
+  var grid=document.getElementById('grid');
+  var totPg=Math.ceil(totalCnt/PAGE_SIZE);
+  var cntHtml='검색 결과 <strong>'+totalCnt.toLocaleString()+'</strong>건';
+  if(totPg>1) cntHtml+=' ('+curPage+'/'+totPg+'p)';
+  document.getElementById('resultCount').innerHTML=cntHtml;
+  if(!results.length){
+    grid.innerHTML='<div class="empty"><span class="icon-big">◫</span><p>조건에 맞는 업체가 없습니다.</p></div>';
+    document.getElementById('paging').innerHTML='';
     return;
   }
-
-  grid.innerHTML = results.map(function(d) {
-    var hasAdmi  = d.admiList && d.admiList.length > 0;
-    var safeName = d.name.replace(/'/g,"\\'");
-    var safeTel  = d.tel.replace(/'/g,"\\'");
-    var types    = d.bizType.split('·');
-    var tags     = types.map(function(t){ return '<span class="tag">' + t.trim() + '</span>'; }).join('');
-    var admiBadge = hasAdmi ? '<span class="admi-badge">⚠ 행정처분</span>' : '';
-    return '<div class="card' + (hasAdmi?' has-admi':'') + '">' +
-      '<div class="card-top"><div class="company-name">' + d.name + '</div>' +
-      '<div style="display:flex;align-items:center;flex-shrink:0">' +
-      '<span class="status-badge">영업중</span>' + admiBadge +
-      '</div></div>' +
-      '<div class="card-meta">' +
-        '<div class="meta-row"><span class="icon">◎</span><span class="value">' + d.sido + ' ' + d.sigungu + '</span></div>' +
-        '<div class="meta-row"><span class="icon">◈</span><span>대표&nbsp;</span><span class="value">' + d.rep + '</span></div>' +
-        '<div class="meta-row"><span class="icon">◉</span><span class="value">' + d.tel + '</span></div>' +
-        '<div class="meta-row"><span class="icon">◷</span><span class="value" style="font-size:11px;color:var(--text3)">' + d.addr + '</span></div>' +
-      '</div>' +
-      (hasAdmi ? renderAdmi(d.admiList) : '') +
-      '<div class="tags">' + tags + '</div>' +
-      '<div class="card-actions">' +
-        '<button class="btn-call" onclick="callTel(\'' + safeTel + '\')">📞 전화걸기</button>' +
-        '<button class="btn-copy" onclick="copyInfo(\'' + safeName + '\',\'' + safeTel + '\')">복사</button>' +
+  grid.innerHTML=results.map(function(d){
+    var hasAdmi=d.admiList&&d.admiList.length>0;
+    var safeName=d.name.replace(/'/g,"\\'");
+    var safeTel=d.tel.replace(/'/g,"\\'");
+    var tags=d.bizType.split('·').map(function(t){return'<span class="tag">'+t.trim()+'</span>';}).join('');
+    var admiBadge=hasAdmi?'<span class="admi-badge">⚠ 행정처분</span>':'';
+    return'<div class="card'+(hasAdmi?' has-admi':'')+'">'+
+      '<div class="card-top"><div class="company-name">'+d.name+'</div>'+
+      '<div style="display:flex;align-items:center;flex-shrink:0"><span class="status-badge">영업중</span>'+admiBadge+'</div></div>'+
+      '<div class="card-meta">'+
+        '<div class="meta-row"><span class="icon">◎</span><span class="value">'+d.sido+' '+d.sigungu+'</span></div>'+
+        '<div class="meta-row"><span class="icon">◈</span><span>대표&nbsp;</span><span class="value">'+d.rep+'</span></div>'+
+        '<div class="meta-row"><span class="icon">◉</span><span class="value">'+d.tel+'</span></div>'+
+        '<div class="meta-row"><span class="icon">◷</span><span class="value" style="font-size:11px;color:var(--text3)">'+d.addr+'</span></div>'+
+      '</div>'+
+      (hasAdmi?renderAdmi(d.admiList):'')+
+      '<div class="tags">'+tags+'</div>'+
+      '<div class="card-actions">'+
+        '<button class="btn-call" onclick="callTel(\''+safeTel+'\')">📞 전화걸기</button>'+
+        '<button class="btn-copy" onclick="copyInfo(\''+safeName+'\',\''+safeTel+'\')">복사</button>'+
       '</div></div>';
   }).join('');
-
-  if (totPg <= 1) { document.getElementById('paging').innerHTML = ''; return; }
-  var s = Math.max(1, curPage-2), e = Math.min(totPg, curPage+2);
-  var pg = '';
-  if (curPage > 1)   pg += '<button class="sort-btn" onclick="doSearch(' + (curPage-1) + ')">◀</button>';
-  for (var i=s; i<=e; i++) pg += '<button class="sort-btn ' + (i===curPage?'active':'') + '" onclick="doSearch(' + i + ')">' + i + '</button>';
-  if (curPage < totPg) pg += '<button class="sort-btn" onclick="doSearch(' + (curPage+1) + ')">▶</button>';
-  document.getElementById('paging').innerHTML = pg;
+  if(totPg<=1){document.getElementById('paging').innerHTML='';return;}
+  var s=Math.max(1,curPage-2),e=Math.min(totPg,curPage+2),pg='';
+  if(curPage>1) pg+='<button class="sort-btn" onclick="doSearch('+(curPage-1)+')">◀</button>';
+  for(var i=s;i<=e;i++) pg+='<button class="sort-btn'+(i===curPage?' active':'')+'" onclick="doSearch('+i+')">'+i+'</button>';
+  if(curPage<totPg) pg+='<button class="sort-btn" onclick="doSearch('+(curPage+1)+')">▶</button>';
+  document.getElementById('paging').innerHTML=pg;
 }
 
-function callTel(tel) {
-  if (!tel || tel==='-') { showToast('전화번호 없음'); return; }
-  window.location.href = 'tel:' + tel.replace(/[^0-9]/g,'');
-}
-
-function copyInfo(name, tel) {
-  navigator.clipboard.writeText(name + ' / ' + tel).then(function(){ showToast('복사됨: ' + name); });
-}
-
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2500);
-}
-
+function callTel(tel){if(!tel||tel==='-'){showToast('전화번호 없음');return;}window.location.href='tel:'+tel.replace(/[^0-9]/g,'');}
+function copyInfo(name,tel){navigator.clipboard.writeText(name+' / '+tel).then(function(){showToast('복사됨: '+name);});}
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
 init();
 </script>
 </body>
